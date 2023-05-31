@@ -3,8 +3,12 @@ package com.zhs.system.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.system.config.BaseController;
 import com.zhs.system.entity.User;
+import com.zhs.system.entity.UserLogin;
 import com.zhs.system.mapper.UserMapper;
+import com.zhs.system.service.UserLoginService;
+import com.zhs.system.service.UserService;
 import com.zhs.system.utils.R;
+import com.zhs.system.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,14 +28,16 @@ import static com.zhs.system.utils.Constant.*;
 public class UserController extends BaseController {
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
+    @Autowired
+    private UserLoginService userLoginService;
 
 
 
     @PostMapping("/login")
     public R login(@RequestBody Map<String,Object> params){
 
-        User user = userMapper.selectOne(new QueryWrapper<User>()
+        User user = userService.getOne(new QueryWrapper<User>()
                 .eq("username", params.get("username")));
         if (user == null) {
             return R.parse(USER_10001);
@@ -39,8 +47,15 @@ public class UserController extends BaseController {
         }else if (!user.isStatus()){
             return R.parse(USER_10002);
         }
-        user.setPassword("");
-
-        return R.ok(user);
+        UserLogin userLogin = new UserLogin();
+        userLogin.setUserId(user.getId());
+        userLogin.setToken(TokenUtils.token(user.getUsername(),user.getPassword()));
+        userLogin.setCreateTime(new Date());
+        userLoginService.saveOrUpdate(userLogin,new QueryWrapper<UserLogin>()
+                .eq("user_id",user.getId()));
+        Map<String, Object> res = new HashMap<>();
+        res.put("username", user.getUsername());
+        res.put("token", userLogin.getToken());
+        return R.ok(res);
     }
 }
