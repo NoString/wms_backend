@@ -56,7 +56,7 @@ public class UserController extends BaseController {
         Map<String, Object> res = new HashMap<>();
         res.put("username", user.getUsername());
         res.put("token", userLogin.getToken());
-
+        res.put("nickname",user.getNickname());
         return R.ok(res);
     }
 }
