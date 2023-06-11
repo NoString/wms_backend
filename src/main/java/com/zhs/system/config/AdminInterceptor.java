@@ -3,10 +3,10 @@ package com.zhs.system.config;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.entity.OperateLog;
-import com.zhs.system.entity.User;
+import com.zhs.system.entity.Users;
 import com.zhs.system.entity.UserLogin;
-import com.zhs.system.service.UserLoginService;
-import com.zhs.system.service.UserService;
+import com.zhs.system.service.LoginService;
+import com.zhs.system.service.UsersService;
 import com.zhs.system.utils.Constant;
 import com.zhs.system.utils.R;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,9 +25,9 @@ import java.util.Date;
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
     @Autowired
-    private UserLoginService userLoginService;
+    private LoginService loginService;
     @Autowired
-    private UserService userService;
+    private UsersService usersService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -64,15 +64,15 @@ public class AdminInterceptor implements HandlerInterceptor {
         try {
             String token = request.getHeader("token");
             //先判断这个token是否存在
-            UserLogin userLogin = userLoginService.getOne(new QueryWrapper<UserLogin>().eq("token", token));
+            UserLogin userLogin = loginService.getOne(new QueryWrapper<UserLogin>().eq("token", token));
             if (null == userLogin){
                     response(response, Constant.DENIED);
                 return false;
             }
 
-            User user = userService.getById(userLogin.getUserId());
+            Users users = usersService.getById(userLogin.getUserId());
             //检查用户是否被禁用
-            if (!user.isStatus()){
+            if (!users.isStatus()){
                 response(response, Constant.BLOCK);
                 return false;
             }
@@ -84,17 +84,17 @@ public class AdminInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            request.setAttribute("userId", user.getId());
+            request.setAttribute("userId", users.getId());
             // 不是通过更新token来刷新有效期,而是通过更新create_time
             userLogin.setCreateTime(new Date());
-            userLoginService.updateById(userLogin);
+            loginService.updateById(userLogin);
             // 操作日志
             if (!memo.equals("")) {
                 // 记录操作日志
                 OperateLog operateLog = new OperateLog();
                 operateLog.setAction(request.getRequestURI());
                 operateLog.setIp(request.getRemoteAddr());
-                operateLog.setUserId(user.getId());
+                operateLog.setUserId(users.getId());
                 operateLog.setRequest(new JSONObject(request.getParameterMap()).toString());
                 request.setAttribute("operateLog", operateLog);
             }
