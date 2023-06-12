@@ -7,10 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 public class BaseController {
     @Autowired
@@ -54,29 +52,84 @@ public class BaseController {
     }
 
 
-    public void parseParamToWrapper(Map<String,Object> params, QueryWrapper wrapper){
+    public <T> void parseParamToWrapper(Map<String, Object> params, QueryWrapper<T> wrapper, Class<T> cls) {
         //将时间段字符串分割,并拼接成sql
         for (String key : params.keySet()) {
             Object value = params.get(key);
-            if (key.contains("_date")){
+            if (key.contains("_date")) {
                 String combineDate = (String) params.get(key);
                 String[] split = combineDate.split(",");
                 String col = key.split("_date")[0];
                 String startDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(split[1]));
                 String endDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(split[3]));
-                wrapper.between(col,startDate.toString(),endDate.toString());
-            }else {
+                wrapper.between(col, startDate.toString(), endDate.toString());
+            } else {
                 if ("true".equalsIgnoreCase(String.valueOf(value))
                         || "false".equalsIgnoreCase(String.valueOf(value))) {
                     value = Boolean.valueOf(String.valueOf(value));
-                    wrapper.eq(key,value);
-
-                }else {
-                    wrapper.like(key,value);
-
-
+                    wrapper.eq(key, value);
+                } else {
+                    wrapper.like(key, value);
                 }
             }
         }
+    }
+
+    public <T> void allLike(QueryWrapper<T> wrapper, String condition, ArrayList<String> unclearColumns, Map<String, Object> unclearParams) {
+        ArrayList<String> realColumns = new ArrayList<>();
+        unclearParams.remove("all");
+        unclearParams.remove("columns");
+        unclearColumns.remove("action");
+        for (String column : unclearColumns) {
+            if (unclearParams.containsKey(column)){
+                continue;
+            }
+            realColumns.add(column);
+        }
+        wrapper.nested(item -> {
+            for (String column : realColumns) {
+                item.like(column, condition);
+                item.or();
+            }
+        });
+//        if (Check.isEmpty(condition)) {
+//            return;
+//        }
+//        List<String> columns = new ArrayList<>();
+//        for (Field field : cls.getDeclaredFields()) {
+//            if (Modifier.isFinal(field.getModifiers())
+//                    || Modifier.isStatic(field.getModifiers())
+//                    || Modifier.isTransient(field.getModifiers())) {
+//                continue;
+//            }
+//            String column = null;
+//            if (field.isAnnotationPresent(TableField.class)) {
+//                if (!field.getAnnotation(TableField.class).exist()) {
+//                    continue;
+//                }
+//                column = field.getAnnotation(TableField.class).value();
+//            }
+//            if (Check.isEmpty(column)) {
+//                column = field.getName();
+//            }
+//
+//            if (Check.isEmpty(column)) {
+//                continue;
+//            }
+//            if (!keySet.contains(column)) {
+//                columns.add(column);
+//            }
+//            if (Check.isEmpty(columns)) {
+//                return;
+//            }
+//
+//        }
+//        wrapper.nested(item -> {
+//            for (String column : columns) {
+//                item.like(column,condition);
+//                item.or();
+//            }
+//        });
+
     }
 }
