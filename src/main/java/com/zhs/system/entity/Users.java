@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zhs.system.service.RoleService;
+import com.zhs.system.utils.SpringUtils;
 import lombok.Data;
 
+import javax.swing.text.Utilities;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,7 +29,7 @@ public class Users {
     private int deptId;
 
     @TableField("role_id")
-    private int roleId;
+    private Long roleId;
 
     @TableField("username")
     private String username;
@@ -68,6 +71,9 @@ public class Users {
     @TableField(exist = false)
     private String lastLogin$;
 
+    @TableField(exist = false)
+    private String role;
+
     public void setId(Long id) {
         this.key = String.valueOf(id);
         this.id = id;
@@ -78,5 +84,12 @@ public class Users {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "dd-MM-yyyy HH:mm:ss");
         this.lastLogin$ = dateFormat.format(lastLogin);
+    }
+
+    public void setRoleId(Long roleId){
+        this.roleId = roleId;
+        RoleService bean = SpringUtils.getBean(RoleService.class);
+        Role role = bean.getById(roleId);
+        this.role = role.getName();
     }
 }
