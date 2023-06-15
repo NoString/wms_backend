@@ -1,6 +1,7 @@
 package com.zhs.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.config.BaseController;
 import com.zhs.system.entity.Users;
 import com.zhs.system.service.UsersService;
@@ -20,6 +21,7 @@ public class UsersController extends BaseController {
     @Autowired
     private UsersService usersService;
 
+
     @GetMapping("/list")
     public R list(@RequestParam(required = false) Map<String, Object> params,
                   @RequestParam(required = false) ArrayList<String> columns) {
@@ -31,10 +33,17 @@ public class UsersController extends BaseController {
         List<Users> list = usersService.list(wrapper);
         return R.ok(list);
     }
-
+    @ManagerAuth("delete user")
     @PostMapping("/delete")
     public R delete(@RequestBody List<Users> usersList) {
         usersService.removeBatchByIds(usersList);
         return R.ok("delete success");
+    }
+
+    @ManagerAuth("add user")
+    @PostMapping("/add")
+    public R add(@RequestBody List<Users> usersList){
+        usersService.saveBatch(usersList);
+        return R.ok("add success");
     }
 }
