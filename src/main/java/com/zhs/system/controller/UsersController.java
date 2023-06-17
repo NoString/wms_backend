@@ -37,13 +37,13 @@ public class UsersController extends BaseController {
     @PostMapping("/delete")
     public R delete(@RequestBody List<Users> usersList) {
         usersService.removeBatchByIds(usersList);
-        return R.ok("delete success");
+        return R.ok("Successfully delete");
     }
 
     @ManagerAuth("add user")
     @PostMapping("/add")
     public R add(@RequestBody List<Users> usersList){
         usersService.saveBatch(usersList);
-        return R.ok("add success");
+        return R.ok("Successfully add");
     }
 }

@@ -41,7 +41,7 @@ public class AdminInterceptor implements HandlerInterceptor {
         if (method.isAnnotationPresent(ManagerAuth.class)){
             ManagerAuth annotation = method.getAnnotation(ManagerAuth.class);
             if (annotation.value().equals(ManagerAuth.Auth.CHECK)){
-                return check(request, response, annotation.memo());
+                return check(request, response, annotation.value());
             }
         }
         return true;
