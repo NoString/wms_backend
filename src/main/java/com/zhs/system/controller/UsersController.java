@@ -5,14 +5,16 @@ import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.config.BaseController;
 import com.zhs.system.entity.Users;
 import com.zhs.system.service.UsersService;
+import com.zhs.system.utils.Check;
 import com.zhs.system.utils.R;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.zhs.system.utils.Constant.DENIED;
 
 @RestController
 @RequestMapping("/users")
@@ -42,7 +44,31 @@ public class UsersController extends BaseController {
 
     @ManagerAuth("add user")
     @PostMapping("/add")
-    public R add(@RequestBody List<Users> usersList){
+    public R add(HttpServletRequest request,
+                 @RequestBody List<Users> usersList){
+        Date date = new Date();
+        Long id = Long.valueOf(request.getHeader("id"));
+        boolean userExist = false;
+
+        if (Check.isEmpty(id)) {
+            return R.parse(DENIED);
+        }
+
+        for (Users user : usersList) {
+            if (usersService.getOne(new QueryWrapper<Users>()
+                    .eq("username", user.getUsername())) != null) {
+                userExist = true;
+                break;
+            }
+            user.setCreateTime(date);
+            user.setUpdateTime(date);
+            user.setCreateBy(id);
+            user.setUpdateBy(id);
+        }
+        if (userExist) {
+            return R.error("The username is exist");
+        }
+
         usersService.saveBatch(usersList);
         return R.ok("Successfully add");
     }

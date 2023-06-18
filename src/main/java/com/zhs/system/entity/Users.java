@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zhs.system.config.UpdateValidateGroup;
 import com.zhs.system.service.RoleService;
 import com.zhs.system.utils.SpringUtils;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import javax.swing.text.Utilities;
@@ -16,9 +19,12 @@ import java.util.Date;
 @TableName("sys_user")
 public class Users {
 
+
     @TableField(exist = false)
     private String key;
 
+    //非string用Notnull, id在数据库是自增长, 添加的时候可以为null,但修改的时候不能为not, groups的作用就是区分添加和修改
+    @NotNull(message = "id is null", groups = {UpdateValidateGroup.class})
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -28,9 +34,11 @@ public class Users {
     @TableField("dept_id")
     private int deptId;
 
+    @NotNull(message = "role is null")
     @TableField("role_id")
     private Long roleId;
 
+    @NotBlank(message = "username is null")
     @TableField("username")
     private String username;
 
@@ -40,6 +48,7 @@ public class Users {
     @TableField("mobile")
     private String mobile;
 
+    @NotBlank(message = "password is null", groups = {UpdateValidateGroup.class})
     @TableField("password")
     private String password;
 
@@ -64,6 +73,7 @@ public class Users {
     @TableField("last_login")
     private Date lastLogin;
 
+    
     @TableField("status")
     private boolean status;
 

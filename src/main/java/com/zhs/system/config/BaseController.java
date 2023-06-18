@@ -4,17 +4,19 @@ package com.zhs.system.config;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.servlet.mvc.AbstractController;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class BaseController {
-    @Autowired
-    private HttpServletRequest request;
 
-    public String getIp() {
+public class BaseController  {
+
+
+    public String getIp(HttpServletRequest request) {
         String ipAddress = null;
         try {
             ipAddress = request.getHeader("x-forwarded-for");
@@ -92,44 +94,8 @@ public class BaseController {
                 item.or();
             }
         });
-//        if (Check.isEmpty(condition)) {
-//            return;
-//        }
-//        List<String> columns = new ArrayList<>();
-//        for (Field field : cls.getDeclaredFields()) {
-//            if (Modifier.isFinal(field.getModifiers())
-//                    || Modifier.isStatic(field.getModifiers())
-//                    || Modifier.isTransient(field.getModifiers())) {
-//                continue;
-//            }
-//            String column = null;
-//            if (field.isAnnotationPresent(TableField.class)) {
-//                if (!field.getAnnotation(TableField.class).exist()) {
-//                    continue;
-//                }
-//                column = field.getAnnotation(TableField.class).value();
-//            }
-//            if (Check.isEmpty(column)) {
-//                column = field.getName();
-//            }
-//
-//            if (Check.isEmpty(column)) {
-//                continue;
-//            }
-//            if (!keySet.contains(column)) {
-//                columns.add(column);
-//            }
-//            if (Check.isEmpty(columns)) {
-//                return;
-//            }
-//
-//        }
-//        wrapper.nested(item -> {
-//            for (String column : columns) {
-//                item.like(column,condition);
-//                item.or();
-//            }
-//        });
+
 
     }
+
 }

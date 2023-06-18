@@ -36,26 +36,27 @@ public class LoginController extends BaseController {
     @PostMapping("/login")
     public R login(@RequestBody Map<String,Object> params){
 
-        Users users = usersService.getOne(new QueryWrapper<Users>()
+        Users user = usersService.getOne(new QueryWrapper<Users>()
                 .eq("username", params.get("username")));
-        if (users == null) {
+        if (user == null) {
             return R.parse(USER_10001);
         }
-        if (!users.getPassword().equals(params.get("password"))){
+        if (!user.getPassword().equals(params.get("password"))){
             return R.parse(USER_10003);
-        }else if (!users.isStatus()){
+        }else if (!user.isStatus()){
             return R.parse(USER_10002);
         }
         UserLogin userLogin = new UserLogin();
-        userLogin.setUserId(users.getId());
-        userLogin.setToken(TokenUtils.token(users.getUsername(), users.getPassword()));
+        userLogin.setUserId(user.getId());
+        userLogin.setToken(TokenUtils.token(user.getUsername(), user.getPassword()));
         userLogin.setCreateTime(new Date());
         loginService.saveOrUpdate(userLogin,new QueryWrapper<UserLogin>()
-                .eq("user_id", users.getId()));
+                .eq("user_id", user.getId()));
         Map<String, Object> res = new HashMap<>();
-        res.put("username", users.getUsername());
+        res.put("username", user.getUsername());
         res.put("token", userLogin.getToken());
-        res.put("nickname", users.getNickname());
+        res.put("nickname", user.getNickname());
+        res.put("id",user.getId());
         return R.ok(res);
     }
 }
