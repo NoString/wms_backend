@@ -25,6 +25,10 @@ public class RoleController extends BaseController {
     @RequestMapping("/query")
     public R roleQuery(){
         List<Map<String, Object>> result = roleService.listMaps();
+//        HashMap<String, Object> defaultMap = new HashMap<>();
+//        defaultMap.put("value","");
+//        defaultMap.put("label","");
+
         for (Map<String, Object> map : result) {
             map.put("value",map.get("id"));
             map.put("label",map.get("name"));

@@ -48,7 +48,6 @@ public class Users {
     @TableField("mobile")
     private String mobile;
 
-    @NotBlank(message = "password is null", groups = {UpdateValidateGroup.class})
     @TableField("password")
     private String password;
 

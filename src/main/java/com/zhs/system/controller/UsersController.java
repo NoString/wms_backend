@@ -45,7 +45,7 @@ public class UsersController extends BaseController {
     @ManagerAuth("add user")
     @PostMapping("/add")
     public R add(HttpServletRequest request,
-                 @RequestBody List<Users> usersList){
+                  @RequestBody List<Users> usersList){
         Date date = new Date();
         Long id = Long.valueOf(request.getHeader("id"));
         boolean userExist = false;
@@ -76,8 +76,22 @@ public class UsersController extends BaseController {
     @ManagerAuth("add user")
     @PostMapping("/edit")
     public R edit(HttpServletRequest request,
-                  @RequestBody List<Users> usersList){
+                  @Validated @RequestBody List<Users> usersList){
         usersService.updateBatchById(usersList);
         return R.ok("Successfully edit");
+    }
+
+    @RequestMapping("/status/query")
+    public R queryStatus(){
+        List<Map<String, Object>> result = new ArrayList<>();
+        HashMap<String, Object> map1 = new HashMap<>();
+        map1.put("value",true);
+        map1.put("label","available");
+        HashMap<String, Object> map2 = new HashMap<>();
+        map2.put("value",false);
+        map2.put("label","unavailable");
+        result.add(map1);
+        result.add(map2);
+        return R.ok(result);
     }
 }
