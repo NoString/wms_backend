@@ -58,6 +58,9 @@ public class Users {
     @TableField("gender")
     private boolean gender;
 
+    @TableField(exist = false)
+    private String gender$;
+
     @TableField("create_time")
     private Date createTime;
 
@@ -101,5 +104,14 @@ public class Users {
         RoleService bean = SpringUtils.getBean(RoleService.class);
         Role role = bean.getById(roleId);
         this.role = role.getName();
+    }
+
+    public void setGender(boolean gender){
+        this.gender = gender;
+        if (gender) {
+            gender$ = "Male";
+        }else {
+            gender$ = "Female";
+        }
     }
 }

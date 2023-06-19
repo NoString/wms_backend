@@ -29,9 +29,9 @@ public class UsersController extends BaseController {
                   @RequestParam(required = false) ArrayList<String> columns) {
         QueryWrapper<Users> wrapper = new QueryWrapper<>();
         if (params.get("all") != null) {
-            allLike(wrapper, (String) params.get("all"), columns,params);
+            allLike(wrapper, (String) params.get("all"), columns,params, Users.class);
         }
-        parseParamToWrapper(params, wrapper, Users.class);
+        parseParamToWrapper(params, wrapper);
         List<Users> list = usersService.list(wrapper);
         return R.ok(list);
     }
@@ -71,5 +71,13 @@ public class UsersController extends BaseController {
 
         usersService.saveBatch(usersList);
         return R.ok("Successfully add");
+    }
+
+    @ManagerAuth("add user")
+    @PostMapping("/edit")
+    public R edit(HttpServletRequest request,
+                  @RequestBody List<Users> usersList){
+        usersService.updateBatchById(usersList);
+        return R.ok("Successfully edit");
     }
 }
