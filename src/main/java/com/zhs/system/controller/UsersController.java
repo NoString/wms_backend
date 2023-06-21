@@ -70,14 +70,14 @@ public class UsersController extends BaseController {
         }
 
         usersService.saveBatch(usersList);
-        return R.ok("Successfully add");
+        return R.ok("Successfully add. But you also need to reset password.");
     }
 
-    @ManagerAuth("add user")
+    @ManagerAuth("edit user")
     @PostMapping("/edit")
     public R edit(HttpServletRequest request,
-                  @Validated @RequestBody List<Users> usersList){
-        usersService.updateBatchById(usersList);
+                  @Validated @RequestBody Users user){
+        usersService.updateById(user);
         return R.ok("Successfully edit");
     }
 
