@@ -2,47 +2,48 @@ package com.zhs.common.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.common.entity.Classify;
-import com.zhs.common.service.ClassifyService;
+import com.zhs.common.entity.Material;
+import com.zhs.common.service.MaterialService;
 import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.config.BaseController;
-import com.zhs.system.entity.Users;
 import com.zhs.system.utils.Check;
 import com.zhs.system.utils.R;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static com.zhs.system.utils.Constant.DENIED;
 
 @RestController
-@RequestMapping("/classify")
-public class ClassifyController extends BaseController {
+@RequestMapping("/material")
+public class MaterialController extends BaseController {
 
     @Autowired
-    private ClassifyService classifyService;
+    private MaterialService materialService;
 
 
     @GetMapping("/list")
     public R list(@RequestParam(required = false) Map<String, Object> params) {
-        QueryWrapper<Classify> wrapper = new QueryWrapper<>();
+        QueryWrapper<Material> wrapper = new QueryWrapper<>();
         parseParamToWrapper(params, wrapper);
-        List<Classify> list = classifyService.list(wrapper);
+        List<Material> list = materialService.list(wrapper);
         return R.ok(list);
     }
-    @ManagerAuth("delete classify")
+    @ManagerAuth("delete material")
     @PostMapping("/delete")
-    public R delete(@RequestBody List<Classify> usersList) {
-        classifyService.removeBatchByIds(usersList);
+    public R delete(@RequestBody List<Material> usersList) {
+        materialService.removeBatchByIds(usersList);
         return R.ok("Successfully delete");
     }
 
-    @ManagerAuth("add classify")
+    @ManagerAuth("add material")
     @PostMapping("/add")
     public R add(HttpServletRequest request,
-                  @RequestBody List<Classify> list){
+                  @RequestBody List<Material> list){
         Date date = new Date();
         Long id = Long.valueOf(request.getHeader("id"));
 
@@ -50,7 +51,7 @@ public class ClassifyController extends BaseController {
             return R.parse(DENIED);
         }
 
-        for (Classify user : list) {
+        for (Material user : list) {
             user.setCreateTime(date);
             user.setUpdateTime(date);
             user.setCreateBy(id);
@@ -58,23 +59,23 @@ public class ClassifyController extends BaseController {
         }
 
 
-        classifyService.saveBatch(list);
+        materialService.saveBatch(list);
         return R.ok("Successfully add. But you also need to reset password.");
     }
 
-    @ManagerAuth("edit classify")
+    @ManagerAuth("edit material")
     @PostMapping("/edit")
     public R edit(HttpServletRequest request,
-                  @RequestBody Classify classify){
+                  @RequestBody Material material){
         Date date = new Date();
         Long id = Long.valueOf(request.getHeader("id"));
 
         if (Check.isEmpty(id)) {
             return R.parse(DENIED);
         }
-        classify.setUpdateBy(id);
-        classify.setUpdateTime(date);
-        classifyService.updateById(classify);
+        material.setUpdateBy(id);
+        material.setUpdateTime(date);
+        materialService.updateById(material);
         return R.ok("Successfully edit");
     }
 

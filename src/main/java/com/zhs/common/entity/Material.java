@@ -1,30 +1,38 @@
 package com.zhs.common.entity;
 
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zhs.system.entity.Users;
-import com.zhs.system.service.RoleService;
 import com.zhs.system.service.UsersService;
 import com.zhs.system.utils.SpringUtils;
-import lombok.Data;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@TableName("wms_classify")
-@Data
-public class Classify {
+@TableName("wms_material")
+public class Material {
 
-    @TableField(exist = false)
-    private String key;
+    @TableId(value = "key", type = IdType.AUTO)
+    private Long key;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Long id;
-
-    @TableField("name")
     private String name;
+
+    private String code;
+
+    @TableField("classify_id")
+    private Long classifyId;
+
+    @TableField("expired_day")
+    private Integer expiredDay;
+
+    private Double weight;
+
+    private String color;
+
+    private String unit;
 
     private String memo;
 
@@ -80,8 +88,4 @@ public class Classify {
         this.updateBy$ = byId.getNickname();
     }
 
-    public void setId(Long id) {
-        this.id = id;
-        this.key = String.valueOf(id);
-    }
 }
