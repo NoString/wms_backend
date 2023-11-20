@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhs.common.mapper.WmsMaterialMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zhs.common.entity.WmsMaterial">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="classify_id" property="classifyId" />
+        <result column="expired_day" property="expiredDay" />
+        <result column="weight" property="weight" />
+        <result column="color" property="color" />
+        <result column="unit" property="unit" />
+        <result column="memo" property="memo" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, code, classify_id, expired_day, weight, color, unit, memo, create_time, create_by, update_time, update_by
+    </sql>
+
+</mapper>

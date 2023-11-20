@@ -52,6 +52,8 @@ public class LoginController extends BaseController {
         userLogin.setCreateTime(new Date());
         loginService.saveOrUpdate(userLogin,new QueryWrapper<UserLogin>()
                 .eq("user_id", user.getId()));
+        user.setLastLogin(new Date());
+        usersService.saveOrUpdate(user);
         Map<String, Object> res = new HashMap<>();
         res.put("username", user.getUsername());
         res.put("token", userLogin.getToken());
