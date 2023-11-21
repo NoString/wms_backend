@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zhs.system.config.UpdateValidateGroup;
 import com.zhs.system.service.RoleService;
+import com.zhs.system.service.UsersService;
+import com.zhs.system.utils.DateFormat;
 import com.zhs.system.utils.SpringUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -92,6 +94,23 @@ public class User {
     @TableField(exist = false)
     private String role;
 
+    @TableField(exist = false)
+    private String createTime$;
+
+    @TableField(exist = false)
+    private String createBy$;
+
+    public void setCreateBy(Long createBy) {
+        this.createBy = createBy;
+        if (createBy != null){
+            UsersService bean = SpringUtils.getBean(UsersService.class);
+            User user = bean.getById(createBy);
+            if (user != null) {
+                createBy$ = user.getUsername();
+            }
+        }
+    }
+
     public void setId(Long id) {
         if (id != null){
             this.key = String.valueOf(id);
@@ -103,11 +122,15 @@ public class User {
     public void setLastLogin(Date lastLogin) {
         if (lastLogin != null){
             this.lastLogin = lastLogin;
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                    "dd-MM-yyyy HH:mm:ss");
-            this.lastLogin$ = dateFormat.format(lastLogin);
+            this.lastLogin$ = DateFormat.dmy(lastLogin);
         }
+    }
 
+    public void setCreateTime(Date createTime) {
+        if (createTime != null){
+            this.createTime = createTime;
+            this.createTime$ = DateFormat.dmy(createTime);
+        }
     }
 
     public void setRoleId(Long roleId){
