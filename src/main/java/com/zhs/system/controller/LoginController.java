@@ -2,7 +2,7 @@ package com.zhs.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.system.config.BaseController;
-import com.zhs.system.entity.Users;
+import com.zhs.system.entity.User;
 import com.zhs.system.entity.UserLogin;
 import com.zhs.system.service.LoginService;
 import com.zhs.system.service.UsersService;
@@ -36,7 +36,7 @@ public class LoginController extends BaseController {
     @PostMapping("/login")
     public R login(@RequestBody Map<String,Object> params){
 
-        Users user = usersService.getOne(new QueryWrapper<Users>()
+        User user = usersService.getOne(new QueryWrapper<User>()
                 .eq("username", params.get("username")));
         if (user == null) {
             return R.parse(USER_10001);

@@ -3,7 +3,7 @@ package com.zhs.system.config;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.entity.OperateLog;
-import com.zhs.system.entity.Users;
+import com.zhs.system.entity.User;
 import com.zhs.system.entity.UserLogin;
 import com.zhs.system.service.LoginService;
 import com.zhs.system.service.UsersService;
@@ -70,9 +70,9 @@ public class AdminInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            Users users = usersService.getById(userLogin.getUserId());
+            User user = usersService.getById(userLogin.getUserId());
             //检查用户是否被禁用
-            if (!users.isStatus()){
+            if (!user.isStatus()){
                 response(response, Constant.BLOCK);
                 return false;
             }
@@ -84,7 +84,7 @@ public class AdminInterceptor implements HandlerInterceptor {
                 return false;
             }
 
-            request.setAttribute("userId", users.getId());
+            request.setAttribute("userId", user.getId());
             // 不是通过更新token来刷新有效期,而是通过更新create_time
             userLogin.setCreateTime(new Date());
             loginService.updateById(userLogin);
@@ -94,7 +94,7 @@ public class AdminInterceptor implements HandlerInterceptor {
                 OperateLog operateLog = new OperateLog();
                 operateLog.setAction(request.getRequestURI());
                 operateLog.setIp(request.getRemoteAddr());
-                operateLog.setUserId(users.getId());
+                operateLog.setUserId(user.getId());
                 operateLog.setRequest(new JSONObject(request.getParameterMap()).toString());
                 request.setAttribute("operateLog", operateLog);
             }

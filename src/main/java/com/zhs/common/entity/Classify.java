@@ -4,8 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.zhs.system.entity.Users;
-import com.zhs.system.service.RoleService;
+import com.zhs.system.entity.User;
 import com.zhs.system.service.UsersService;
 import com.zhs.system.utils.SpringUtils;
 import lombok.Data;
@@ -62,7 +61,7 @@ public class Classify {
     public void setCreateBy(Long createBy) {
         this.createBy = createBy;
         UsersService bean = SpringUtils.getBean(UsersService.class);
-        Users byId = bean.getById(createBy);
+        User byId = bean.getById(createBy);
         this.createBy$ = byId.getNickname();
     }
 
@@ -76,7 +75,7 @@ public class Classify {
     public void setUpdateBy(Long updateBy) {
         this.updateBy = updateBy;
         UsersService bean = SpringUtils.getBean(UsersService.class);
-        Users byId = bean.getById(updateBy);
+        User byId = bean.getById(updateBy);
         this.updateBy$ = byId.getNickname();
     }
 

@@ -1,6 +1,6 @@
 package com.zhs.wms_backend;
 
-import com.zhs.system.entity.Users;
+import com.zhs.system.entity.User;
 import com.zhs.system.mapper.UsersMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ class BootTests {
 
     @Test
     void contextLoads() {
-        List<Users> users = usersMapper.selectList(null);
+        List<User> users = usersMapper.selectList(null);
 
     }
 

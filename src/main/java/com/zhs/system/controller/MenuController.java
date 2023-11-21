@@ -1,21 +1,14 @@
 package com.zhs.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.config.BaseController;
 import com.zhs.system.entity.Menu;
-import com.zhs.system.entity.Users;
 import com.zhs.system.service.MenuService;
-import com.zhs.system.utils.Check;
 import com.zhs.system.utils.R;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
-import static com.zhs.system.utils.Constant.DENIED;
 
 @RestController
 @RequestMapping("/menu")

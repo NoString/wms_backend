@@ -9,15 +9,15 @@ import com.zhs.system.service.RoleService;
 import com.zhs.system.utils.SpringUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import javax.swing.text.Utilities;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
 @TableName("sys_user")
-public class Users {
+public class User {
 
 
     @TableField(exist = false)
@@ -34,20 +34,26 @@ public class Users {
     @TableField("dept_id")
     private int deptId;
 
-    @NotNull(message = "role is null")
+
     @TableField("role_id")
     private Long roleId;
 
+    @Size(min = 4,max = 30)
     @NotBlank(message = "username is null")
     @TableField("username")
     private String username;
 
+    @Size(min = 4,max = 30)
+    @NotBlank(message = "username is null")
     @TableField("nickname")
     private String nickname;
+
 
     @TableField("mobile")
     private String mobile;
 
+    @Size(min = 4,max = 30)
+    @NotBlank(message = "username is null")
     @TableField("password")
     private String password;
 
@@ -87,22 +93,31 @@ public class Users {
     private String role;
 
     public void setId(Long id) {
-        this.key = String.valueOf(id);
-        this.id = id;
+        if (id != null){
+            this.key = String.valueOf(id);
+            this.id = id;
+        }
+
     }
 
     public void setLastLogin(Date lastLogin) {
-        this.lastLogin = lastLogin;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "dd-MM-yyyy HH:mm:ss");
-        this.lastLogin$ = dateFormat.format(lastLogin);
+        if (lastLogin != null){
+            this.lastLogin = lastLogin;
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "dd-MM-yyyy HH:mm:ss");
+            this.lastLogin$ = dateFormat.format(lastLogin);
+        }
+
     }
 
     public void setRoleId(Long roleId){
-        this.roleId = roleId;
-        RoleService bean = SpringUtils.getBean(RoleService.class);
-        Role role = bean.getById(roleId);
-        this.role = role.getName();
+        if (roleId != null){
+            this.roleId = roleId;
+            RoleService bean = SpringUtils.getBean(RoleService.class);
+            Role role = bean.getById(roleId);
+            this.role = role.getName();
+        }
+
     }
 
     public void setGender(boolean gender){
