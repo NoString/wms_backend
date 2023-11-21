@@ -48,16 +48,16 @@ public class ClassifyController extends BaseController {
             return R.parse(DENIED);
         }
 
-        for (Classify user : list) {
-            user.setCreateTime(date);
-            user.setUpdateTime(date);
-            user.setCreateBy(id);
-            user.setUpdateBy(id);
+        for (Classify item : list) {
+            item.setCreateTime(date);
+            item.setUpdateTime(date);
+            item.setCreateBy(id);
+            item.setUpdateBy(id);
         }
 
 
         classifyService.saveBatch(list);
-        return R.ok("Successfully add. But you also need to reset password.");
+        return R.ok("Successfully add.");
     }
 
     @ManagerAuth("edit classify")

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zhs.system.entity.User;
 import com.zhs.system.service.UsersService;
+import com.zhs.system.utils.DateFormat;
 import com.zhs.system.utils.SpringUtils;
 import lombok.Data;
 
@@ -53,30 +54,40 @@ public class Classify {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "dd-MM-yyyy HH:mm:ss");
-        this.createTime$ = dateFormat.format(createTime);
+        this.createTime$ = DateFormat.dmy(createTime);
     }
 
     public void setCreateBy(Long createBy) {
         this.createBy = createBy;
-        UsersService bean = SpringUtils.getBean(UsersService.class);
-        User byId = bean.getById(createBy);
-        this.createBy$ = byId.getNickname();
+        if (createBy != null){
+            UsersService bean = SpringUtils.getBean(UsersService.class);
+            User byId = bean.getById(createBy);
+            if (byId != null){
+                this.createBy$ = byId.getUsername();
+
+            }
+        }
+
     }
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "dd-MM-yyyy HH:mm:ss");
-        this.updateTime$ = dateFormat.format(updateTime);
+
+        this.updateTime$ = DateFormat.dmy(updateTime);
     }
 
     public void setUpdateBy(Long updateBy) {
         this.updateBy = updateBy;
-        UsersService bean = SpringUtils.getBean(UsersService.class);
-        User byId = bean.getById(updateBy);
-        this.updateBy$ = byId.getNickname();
+        if (updateBy != null){
+            UsersService bean = SpringUtils.getBean(UsersService.class);
+            User byId = bean.getById(updateBy);
+            if (byId != null){
+                this.updateBy$ = byId.getNickname();
+
+            }
+
+        }
+
     }
 
     public void setId(Long id) {

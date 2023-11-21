@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -45,8 +47,8 @@ public class WmsMaterial implements Serializable {
     /**
      * classify id
      */
-    @TableField("classify_id")
-    private Long classifyId;
+    @TableField("classify_name")
+    private String classifyName;
 
     /**
      * expired day
@@ -82,7 +84,7 @@ public class WmsMaterial implements Serializable {
      * create time
      */
     @TableField("create_time")
-    private LocalDateTime createTime;
+    private Date createTime;
 
     /**
      * create user
@@ -94,7 +96,7 @@ public class WmsMaterial implements Serializable {
      * update time
      */
     @TableField("update_time")
-    private LocalDateTime updateTime;
+    private Date updateTime;
 
     /**
      * update user
