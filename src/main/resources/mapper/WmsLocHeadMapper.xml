@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhs.common.mapper.WmsLocHeadMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zhs.common.entity.WmsLocHead">
+        <id column="id" property="id" />
+        <result column="loc_no" property="locNo" />
+        <result column="loc_row" property="locRow" />
+        <result column="loc_bay" property="locBay" />
+        <result column="loc_level" property="locLevel" />
+        <result column="loc_sts" property="locSts" />
+        <result column="loc_type" property="locType" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, loc_no, loc_row, loc_bay, loc_level, loc_sts, loc_type
+    </sql>
+
+</mapper>
