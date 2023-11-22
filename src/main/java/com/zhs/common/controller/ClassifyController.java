@@ -40,23 +40,19 @@ public class ClassifyController extends BaseController {
     @ManagerAuth("add classify")
     @PostMapping("/add")
     public R add(HttpServletRequest request,
-                  @RequestBody List<Classify> list){
+                  @RequestBody Classify item){
         Date date = new Date();
         Long id = Long.valueOf(request.getHeader("id"));
 
         if (Check.isEmpty(id)) {
             return R.parse(DENIED);
         }
+        item.setCreateTime(date);
+        item.setUpdateTime(date);
+        item.setCreateBy(id);
+        item.setUpdateBy(id);
 
-        for (Classify item : list) {
-            item.setCreateTime(date);
-            item.setUpdateTime(date);
-            item.setCreateBy(id);
-            item.setUpdateBy(id);
-        }
-
-
-        classifyService.saveBatch(list);
+        classifyService.save(item);
         return R.ok("Successfully add.");
     }
 

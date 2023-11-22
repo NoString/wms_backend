@@ -26,6 +26,10 @@ public class WmsMaterial implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    @TableField(exist = false)
+    private String key;
+
     /**
      * unique id
      */
@@ -90,7 +94,7 @@ public class WmsMaterial implements Serializable {
      * create user
      */
     @TableField("create_by")
-    private Long createBy;
+    private String createBy;
 
     /**
      * update time
@@ -102,7 +106,13 @@ public class WmsMaterial implements Serializable {
      * update user
      */
     @TableField("update_by")
-    private Long updateBy;
+    private String updateBy;
 
+    public void setId(Long id) {
+        if (id != null){
+            this.key = String.valueOf(id);
+            this.id = id;
+        }
+    }
 
 }

@@ -56,23 +56,20 @@ public class WmsMaterialController extends BaseController {
     @ManagerAuth("add classify")
     @PostMapping("/add")
     public R add(HttpServletRequest request,
-                 @RequestBody List<WmsMaterial> list){
+                 @RequestBody WmsMaterial item){
         Date date = new Date();
-        Long id = Long.valueOf(request.getHeader("id"));
-
-        if (Check.isEmpty(id)) {
+        String username = request.getHeader("username");
+        if (Check.isEmpty(username)) {
             return R.parse(DENIED);
         }
-
-        for (WmsMaterial item : list) {
-            item.setCreateTime(date);
-            item.setUpdateTime(date);
-            item.setCreateBy(id);
-            item.setUpdateBy(id);
-        }
+        item.setCreateTime(date);
+        item.setUpdateTime(date);
+        item.setCreateBy(username);
+        item.setUpdateBy(username);
 
 
-        materialService.saveBatch(list);
+
+        materialService.save(item);
         return R.ok("Successfully add.");
     }
 
@@ -81,12 +78,13 @@ public class WmsMaterialController extends BaseController {
     public R edit(HttpServletRequest request,
                   @RequestBody WmsMaterial editObj){
         Date date = new Date();
-        Long id = Long.valueOf(request.getHeader("id"));
+        String username = request.getHeader("username");
 
-        if (Check.isEmpty(id)) {
+        if (Check.isEmpty(username)) {
             return R.parse(DENIED);
         }
-        editObj.setUpdateBy(id);
+
+        editObj.setUpdateBy(username);
         editObj.setUpdateTime(date);
         materialService.updateById(editObj);
         return R.ok("Successfully edit");
