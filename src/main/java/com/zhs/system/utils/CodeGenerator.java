@@ -17,7 +17,7 @@ public class CodeGenerator {
     //设置生成的目录名
     private static final String PACKAGE_NAME = "common";
 
-    private static final String TABLE_NAME = "wms_loc_head";
+    private static final String TABLE_NAME = "wms_loc_tail";
     public static void main(String[] args) {
         FastAutoGenerator.create(DB_URL,DB_USERNAME,DB_PASSWORD)
                 .globalConfig(builder -> {

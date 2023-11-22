@@ -4,14 +4,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsMaterial;
 import com.zhs.common.service.IWmsLocHeadService;
+import com.zhs.system.annotation.ManagerAuth;
+import com.zhs.system.utils.Check;
 import com.zhs.system.utils.R;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.zhs.system.config.BaseController;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.zhs.system.utils.Constant.DENIED;
 
 /**
  * <p>
@@ -61,5 +67,14 @@ public class WmsLocHeadController extends BaseController {
         }
         locHeadService.saveBatch(wmsLocHeads);
         return R.ok();
+    }
+
+    @ManagerAuth("edit classify")
+    @PostMapping("/edit")
+    public R edit(HttpServletRequest request,
+                  @RequestBody WmsLocHead editObj){
+
+        locHeadService.updateById(editObj);
+        return R.ok("Successfully edit");
     }
 }
