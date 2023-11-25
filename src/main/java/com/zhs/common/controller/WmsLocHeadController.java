@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.zhs.system.config.BaseController;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.zhs.system.utils.Constant.DENIED;
 
@@ -76,5 +73,19 @@ public class WmsLocHeadController extends BaseController {
 
         locHeadService.updateById(editObj);
         return R.ok("Successfully edit");
+    }
+
+    @RequestMapping("/query/available")
+    public R queryAvailableLoc(){
+        List<WmsLocHead> allAvailableLoc = locHeadService.list(new QueryWrapper<WmsLocHead>()
+                .eq("loc_sts", "E.Empty Storage"));
+        ArrayList<HashMap<String, String>> hashMaps = new ArrayList<>();
+        for (WmsLocHead wmsLocHead : allAvailableLoc) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("label", wmsLocHead.getLocNo());
+            map.put("value", wmsLocHead.getLocNo());
+            hashMaps.add(map);
+        }
+        return R.ok(hashMaps);
     }
 }

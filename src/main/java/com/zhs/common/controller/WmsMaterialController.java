@@ -3,6 +3,7 @@ package com.zhs.common.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
 import com.zhs.common.entity.Classify;
+import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsMaterial;
 import com.zhs.common.service.ClassifyService;
 import com.zhs.common.service.IWmsMaterialService;
@@ -101,5 +102,29 @@ public class WmsMaterialController extends BaseController {
             result.add(map);
         }
         return R.ok(result);
+    }
+
+    @RequestMapping("/materialNames/query")
+    public R queryMaterialNames(){
+        List<WmsMaterial> list = materialService.list();
+        ArrayList<HashMap<String, String>> hashMaps = new ArrayList<>();
+        for (WmsMaterial material : list) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("label", material.getName());
+            map.put("value", material.getName());
+            map.put("id", String.valueOf(material.getId()));
+            hashMaps.add(map);
+        }
+        return R.ok(hashMaps);
+    }
+
+    @RequestMapping("/id")
+    public R getMaterialById(Integer id){
+        WmsMaterial byId = materialService.getById(id);
+        if (byId == null){
+            return R.error("this material is not exist");
+        }else {
+            return R.ok(byId);
+        }
     }
 }
