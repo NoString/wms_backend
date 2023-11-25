@@ -10,6 +10,9 @@ public class DateFormat {
      * @return
      */
     public static String dmy(Date date){
+        if (date == null){
+            return "";
+        }
         SimpleDateFormat dateFormat = new SimpleDateFormat(
                 "HH:mm:ss-dd-MMM-yyyy");
         return dateFormat.format(date);

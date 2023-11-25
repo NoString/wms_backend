@@ -5,10 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 
+import com.zhs.system.utils.DateFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,10 +45,9 @@ public class WmsLocTail implements Serializable {
     private String code;
 
     @TableField("m_classify_name")
-    private String mClassifyName;
+    private String classifyName;
 
-    @TableField("m_expired_date")
-    private Date mExpiredDate;
+
 
     @TableField("m_weight")
     private Double mWeight;
@@ -76,6 +80,48 @@ public class WmsLocTail implements Serializable {
 
     @TableField(exist = false)
     private String key;
+
+    @TableField(exist = false)
+    private String createTime$;
+
+    @TableField(exist = false)
+    private String expiredDate$;
+
+    @TableField(exist = false)
+    private Integer progress;
+    @TableField("m_expired_date")
+    private Date expiredDate;
+
+
+
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+        this.createTime$ = DateFormat.dmy(createTime);
+    }
+
+    public void setExpiredDate(Date expiredDate) {
+        this.expiredDate = expiredDate;
+        this.expiredDate$ = DateFormat.dmy(expiredDate);
+
+
+        //设置进度条
+        LocalDateTime startTime = LocalDateTime.ofInstant(createTime.toInstant(), ZoneId.systemDefault());
+        LocalDateTime endTime = LocalDateTime.ofInstant(expiredDate.toInstant(), ZoneId.systemDefault());
+        LocalDateTime currentTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
+
+        long totalDuration = ChronoUnit.SECONDS.between(startTime, endTime);
+        long remainingDuration = ChronoUnit.SECONDS.between(currentTime, endTime);
+        if (totalDuration == 0) {
+            throw new IllegalArgumentException("开始时间和结束时间不能相同");
+        }
+
+        // 防止当前时间超出时间范围
+        if (remainingDuration < 0) {
+            setProgress(0);
+        }
+        setProgress((int) ((remainingDuration * 100) / totalDuration));
+    }
 
     public void setId(Long id) {
         if (id != null){

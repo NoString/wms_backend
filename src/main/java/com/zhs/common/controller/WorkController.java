@@ -76,13 +76,13 @@ public class WorkController {
             newTail.setMaterialId(material.getId());
             newTail.setName(material.getName());
             newTail.setCode(material.getCode());
-            newTail.setMClassifyName(material.getClassifyName());
+            newTail.setClassifyName(material.getClassifyName());
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
             calendar.add(Calendar.DAY_OF_MONTH, material.getExpiredDay());
             Date expiredDate = calendar.getTime();
-            newTail.setMExpiredDate(expiredDate);
+            newTail.setExpiredDate(expiredDate);
 
             newTail.setMWeight(material.getWeight());
             newTail.setMColor(material.getColor());

@@ -8,8 +8,8 @@
         <result column="loc_no" property="locNo" />
         <result column="m_name" property="name" />
         <result column="m_code" property="code" />
-        <result column="m_classify_name" property="mClassifyName" />
-        <result column="m_expired_day" property="mExpiredDate" />
+        <result column="m_classify_name" property="classifyName" />
+        <result column="m_expired_date" property="expiredDate" />
         <result column="m_weight" property="mWeight" />
         <result column="m_color" property="mColor" />
         <result column="m_unit" property="mUnit" />
