@@ -104,23 +104,26 @@ public class WmsLocTail implements Serializable {
         this.expiredDate = expiredDate;
         this.expiredDate$ = DateFormat.dmy(expiredDate);
 
+        if (createTime != null && expiredDate != null){
+            //设置进度条
+            LocalDateTime startTime = LocalDateTime.ofInstant(createTime.toInstant(), ZoneId.systemDefault());
+            LocalDateTime endTime = LocalDateTime.ofInstant(expiredDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime currentTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
 
-        //设置进度条
-        LocalDateTime startTime = LocalDateTime.ofInstant(createTime.toInstant(), ZoneId.systemDefault());
-        LocalDateTime endTime = LocalDateTime.ofInstant(expiredDate.toInstant(), ZoneId.systemDefault());
-        LocalDateTime currentTime = LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
+            long totalDuration = ChronoUnit.SECONDS.between(startTime, endTime);
+            long remainingDuration = ChronoUnit.SECONDS.between(currentTime, endTime);
+            if (totalDuration == 0) {
+                throw new IllegalArgumentException("开始时间和结束时间不能相同");
+            }
 
-        long totalDuration = ChronoUnit.SECONDS.between(startTime, endTime);
-        long remainingDuration = ChronoUnit.SECONDS.between(currentTime, endTime);
-        if (totalDuration == 0) {
-            throw new IllegalArgumentException("开始时间和结束时间不能相同");
+            // 防止当前时间超出时间范围
+            if (remainingDuration < 0) {
+                setProgress(0);
+            }
+            setProgress((int) ((remainingDuration * 100) / totalDuration));
         }
 
-        // 防止当前时间超出时间范围
-        if (remainingDuration < 0) {
-            setProgress(0);
-        }
-        setProgress((int) ((remainingDuration * 100) / totalDuration));
+
     }
 
     public void setId(Long id) {

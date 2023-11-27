@@ -2,6 +2,7 @@ package com.zhs.common.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsLocTail;
 import com.zhs.common.entity.WmsMaterial;
@@ -96,5 +97,43 @@ public class WorkController {
             tailService.save(newTail);
         }
         return R.ok("All data had added the database.");
+    }
+
+
+    @PostMapping("/moveOut")
+    @Transactional
+    public R moveOut(@RequestBody ArrayList<WmsLocTail> locTails,
+                     HttpServletRequest request){
+
+        /**
+         * 先把所有需要出库且库位相同的数据合并到一个map里
+         * 然后遍历这个map, 每遍历完一个库位,判断明细表是否还有该库位的明细,如果没有明细,将库位状态改为"空库位"
+         */
+        HashMap<String, ArrayList<WmsLocTail>> map = new HashMap<>();
+        for (WmsLocTail locTail : locTails) {
+            if (!map.containsKey(locTail.getLocNo())) {
+                map.put(locTail.getLocNo(), new ArrayList<WmsLocTail>());
+            }
+            map.get(locTail.getLocNo()).add(locTail);
+        }
+
+        for (String key : map.keySet()) {
+            ArrayList<WmsLocTail> combineByLocNoTails = map.get(key);
+            for (WmsLocTail locTail : combineByLocNoTails) {
+                WmsLocTail target = tailService.getById(locTail);
+                if (Check.isEmpty(target)) {
+                    return R.error("The location number is " + target.getLocNo() + ", the material name is " + target.getName() + ", which is not exist in database. \n try to refresh the page to get newest data.");
+                }
+                tailService.removeById(locTail);
+            }
+            long locNoCount = tailService.count(new QueryWrapper<WmsLocTail>()
+                    .eq("loc_no", key));
+            if (locNoCount <= 0) {
+                headService.update(new UpdateWrapper<WmsLocHead>()
+                        .eq("loc_no", key)
+                        .set("loc_sts","E.Empty Storage"));
+            }
+        }
+        return R.ok("All selected data had remove from the database.");
     }
 }

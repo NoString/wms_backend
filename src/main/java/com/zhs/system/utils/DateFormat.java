@@ -14,7 +14,7 @@ public class DateFormat {
             return "";
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "HH:mm:ss-dd-MMM-yyyy");
+                "yyyy-MMM-dd-HH:mm:ss");
         return dateFormat.format(date);
     }
 }
