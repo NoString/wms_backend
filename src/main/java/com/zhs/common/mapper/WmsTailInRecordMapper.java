@@ -2,7 +2,7 @@ package com.zhs.common.mapper;
 
 import com.zhs.common.entity.WmsTailInRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zhs.common.entity.param.ClassifyParam;
+import com.zhs.common.entity.param.PieParam;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,9 +28,9 @@ public interface WmsTailInRecordMapper extends BaseMapper<WmsTailInRecord> {
     Integer countByDate(@Param("date") String recentSevenDay);
 
     @Select("SELECT COUNT(m_classify_name) AS 'value', m_classify_name AS 'name' FROM `wms_tail_in_record` GROUP BY m_classify_name")
-    ArrayList<ClassifyParam> groupByClassify();
+    ArrayList<PieParam> groupByClassify();
     @Select("SELECT COUNT(create_by) AS 'value', create_by AS 'name' FROM `wms_tail_in_record` GROUP BY create_by")
 
-    ArrayList<ClassifyParam> groupByUsername();
+    ArrayList<PieParam> groupByUsername();
 
 }
