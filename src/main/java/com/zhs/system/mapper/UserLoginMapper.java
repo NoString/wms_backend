@@ -5,7 +5,6 @@ import com.zhs.system.entity.UserLogin;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Mapper
 public interface UserLoginMapper extends BaseMapper<UserLogin> {
 }

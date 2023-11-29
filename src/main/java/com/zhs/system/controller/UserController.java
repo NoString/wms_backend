@@ -35,14 +35,14 @@ public class UserController extends BaseController {
         List<User> list = usersService.list(wrapper);
         return R.ok(list);
     }
-    @ManagerAuth("delete user")
+    @ManagerAuth("delete")
     @PostMapping("/delete")
     public R delete(@RequestBody List<User> userList) {
         usersService.removeBatchByIds(userList);
         return R.ok("Successfully delete");
     }
 
-    @ManagerAuth("add user")
+    @ManagerAuth("add")
     @PostMapping("/add")
     public R add(HttpServletRequest request,
                  @Validated @RequestBody User user){
@@ -68,7 +68,7 @@ public class UserController extends BaseController {
         return R.ok("Successfully add.");
     }
 
-    @ManagerAuth("edit user")
+    @ManagerAuth(value = "edit", isCheck = ManagerAuth.Auth.CHECK)
     @PostMapping("/edit")
     public R edit(HttpServletRequest request,
                   @Validated @RequestBody User user){

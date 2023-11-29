@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhs.common.mapper.WmsTailOutRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zhs.common.entity.WmsTailOutRecord">
+        <id column="id" property="id" />
+        <result column="qty" property="qty" />
+        <result column="loc_no" property="locNo" />
+        <result column="m_id" property="mId" />
+        <result column="m_name" property="mName" />
+        <result column="m_code" property="mCode" />
+        <result column="m_classify_name" property="mClassifyName" />
+        <result column="m_expired_date" property="mExpiredDate" />
+        <result column="m_weight" property="mWeight" />
+        <result column="m_color" property="mColor" />
+        <result column="m_unit" property="mUnit" />
+        <result column="m_memo" property="mMemo" />
+        <result column="create_time" property="createTime" />
+        <result column="create_by" property="createBy" />
+        <result column="update_time" property="updateTime" />
+        <result column="update_by" property="updateBy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, qty, loc_no, m_id, m_name, m_code, m_classify_name, m_expired_date, m_weight, m_color, m_unit, m_memo, create_time, create_by, update_time, update_by
+    </sql>
+
+</mapper>

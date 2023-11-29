@@ -5,6 +5,7 @@ import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.entity.OperateLog;
 import com.zhs.system.entity.User;
 import com.zhs.system.entity.UserLogin;
+import com.zhs.system.mapper.UserLoginMapper;
 import com.zhs.system.service.LoginService;
 import com.zhs.system.service.UsersService;
 import com.zhs.system.utils.Constant;
@@ -13,6 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class AdminInterceptor implements HandlerInterceptor {
@@ -28,6 +31,9 @@ public class AdminInterceptor implements HandlerInterceptor {
     private LoginService loginService;
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private UserLoginMapper userLoginMapper;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -40,9 +46,9 @@ public class AdminInterceptor implements HandlerInterceptor {
         Method method = handlerMethod.getMethod();
         if (method.isAnnotationPresent(ManagerAuth.class)){
             ManagerAuth annotation = method.getAnnotation(ManagerAuth.class);
-            if (annotation.value().equals(ManagerAuth.Auth.CHECK)){
-                return check(request, response, annotation.value());
-            }
+//            if (annotation.isCheck().equals(ManagerAuth.Auth.CHECK)){
+//                return check(request, response, annotation.value());
+//            }
         }
         return true;
     }
@@ -63,6 +69,7 @@ public class AdminInterceptor implements HandlerInterceptor {
     private boolean check(HttpServletRequest request, HttpServletResponse response, String memo) {
         try {
             String token = request.getHeader("token");
+            List<UserLogin> userLogins = userLoginMapper.selectList(null);
             //先判断这个token是否存在
             UserLogin userLogin = loginService.getOne(new QueryWrapper<UserLogin>().eq("token", token));
             if (null == userLogin){
@@ -100,6 +107,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             }
             return true;
         } catch (Exception e){
+            e.printStackTrace();
             response(response, Constant.DENIED);
             return false;
         }

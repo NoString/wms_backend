@@ -7,5 +7,5 @@ import com.zhs.system.service.LoginService;
 import org.springframework.stereotype.Service;
 
 @Service
-public class loginServiceImpl extends ServiceImpl<UserLoginMapper, UserLogin> implements LoginService {
+public class LoginServiceImpl extends ServiceImpl<UserLoginMapper, UserLogin> implements LoginService {
 }

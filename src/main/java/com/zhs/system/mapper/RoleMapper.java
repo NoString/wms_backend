@@ -5,7 +5,7 @@ import com.zhs.system.entity.Role;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
+
 @Mapper
 public interface RoleMapper extends BaseMapper<Role> {
 }

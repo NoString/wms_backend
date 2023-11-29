@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsLocTail;
 import com.zhs.common.entity.WmsMaterial;
+import com.zhs.common.mapper.WmsTailInRecordMapper;
+import com.zhs.common.mapper.WmsTailOutRecordMapper;
 import com.zhs.common.service.IWmsLocHeadService;
 import com.zhs.common.service.IWmsLocTailService;
 import com.zhs.common.service.IWmsMaterialService;
@@ -34,6 +36,12 @@ public class WorkController {
     private IWmsMaterialService materialService;
     @Autowired
     private IWmsLocTailService tailService;
+
+    @Autowired
+    private WmsTailInRecordMapper inRecordMapper;
+
+    @Autowired
+    private WmsTailOutRecordMapper outRecordMapper;
 
     @PostMapping("/putin")
     @Transactional
@@ -93,8 +101,8 @@ public class WorkController {
             newTail.setUpdateBy(username);
             newTail.setCreateTime(date);
             newTail.setCreateBy(username);
-
             tailService.save(newTail);
+            inRecordMapper.saveRecord(newTail.getId());
         }
         return R.ok("All data had added the database.");
     }
@@ -124,6 +132,7 @@ public class WorkController {
                 if (Check.isEmpty(target)) {
                     return R.error("The location number is " + target.getLocNo() + ", the material name is " + target.getName() + ", which is not exist in database. \n try to refresh the page to get newest data.");
                 }
+                outRecordMapper.saveRecord(locTail.getId());
                 tailService.removeById(locTail);
             }
             long locNoCount = tailService.count(new QueryWrapper<WmsLocTail>()
