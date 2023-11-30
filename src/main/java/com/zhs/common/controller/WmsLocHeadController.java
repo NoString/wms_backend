@@ -3,6 +3,8 @@ package com.zhs.common.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsMaterial;
+import com.zhs.common.entity.param.ChartParam;
+import com.zhs.common.mapper.WmsLocHeadMapper;
 import com.zhs.common.service.IWmsLocHeadService;
 import com.zhs.system.annotation.ManagerAuth;
 import com.zhs.system.utils.Check;
@@ -30,6 +32,8 @@ public class WmsLocHeadController extends BaseController {
 
     @Autowired
     private IWmsLocHeadService locHeadService;
+    @Autowired
+    private WmsLocHeadMapper wmsLocHeadMapper;
 
     @GetMapping("/list")
     public R list(@RequestParam(required = false) Map<String, Object> params,
@@ -87,5 +91,21 @@ public class WmsLocHeadController extends BaseController {
             hashMaps.add(map);
         }
         return R.ok(hashMaps);
+    }
+
+    @RequestMapping("/groupBySts")
+    public R groupBySts(){
+        ArrayList<ChartParam> chartParams =  wmsLocHeadMapper.groupBySts();
+        ArrayList<Object> stsNames = new ArrayList<>();
+        ArrayList<Object> stsCount = new ArrayList<>();
+        for (ChartParam chartParam : chartParams) {
+            stsNames.add(chartParam.getName());
+            stsCount.add(chartParam.getValue());
+        }
+        HashMap<String, ArrayList<Object>> result = new HashMap<>();
+        result.put("name",stsNames);
+        result.put("count",stsCount);
+
+        return R.ok(result);
     }
 }

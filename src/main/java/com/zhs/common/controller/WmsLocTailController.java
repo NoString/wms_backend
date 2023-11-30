@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.zhs.system.config.BaseController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +41,37 @@ public class WmsLocTailController extends BaseController {
         parseParamToWrapper(params, wrapper);
         List<WmsLocTail> list = locTailService.list(wrapper);
         return R.ok(list);
+    }
+
+    @RequestMapping("/tailSts")
+    public R getTailStsCount(){
+        List<WmsLocTail> wmsLocTails = locTailService.list();
+        HashMap<String, Integer> countStsMap = new HashMap<>();
+        countStsMap.put("80",0);
+        countStsMap.put("60",0);
+        countStsMap.put("40",0);
+        countStsMap.put("20",0);
+        countStsMap.put("less20",0);
+
+        for (WmsLocTail wmsLocTail : wmsLocTails) {
+            if (wmsLocTail.getProgress() >= 80) {
+                countStsMap.put("80",countStsMap.get("80") + 1);
+            } else if (wmsLocTail.getProgress() >= 60) {
+                countStsMap.put("60",countStsMap.get("60") + 1);
+            }else if (wmsLocTail.getProgress() >= 40) {
+                countStsMap.put("40",countStsMap.get("40") + 1);
+            }else if (wmsLocTail.getProgress() >= 20) {
+                countStsMap.put("20",countStsMap.get("20") + 1);
+            }else {
+                countStsMap.put("less20",countStsMap.get("less20") + 1);
+            }
+        }
+        ArrayList<Object> tailStsNames = new ArrayList<>(countStsMap.keySet());
+        ArrayList<Object> tailStsCount = new ArrayList<>(countStsMap.values());
+
+        HashMap<String, ArrayList<Object>> result = new HashMap<>();
+        result.put("name",tailStsNames);
+        result.put("count",tailStsCount);
+        return R.ok(result);
     }
 }

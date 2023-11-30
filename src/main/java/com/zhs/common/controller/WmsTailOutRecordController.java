@@ -1,6 +1,6 @@
 package com.zhs.common.controller;
 
-import com.zhs.common.entity.param.PieParam;
+import com.zhs.common.entity.param.ChartParam;
 import com.zhs.common.mapper.WmsTailOutRecordMapper;
 import com.zhs.system.utils.DateFormat;
 import com.zhs.system.utils.R;
@@ -38,14 +38,14 @@ public class WmsTailOutRecordController extends BaseController {
 
     @RequestMapping("/classifyCount")
     public R listClassifyCount(){
-        ArrayList<PieParam> pieParams = tailOutRecordMapper.groupByClassify();
-        return R.ok(pieParams);
+        ArrayList<ChartParam> chartParams = tailOutRecordMapper.groupByClassify();
+        return R.ok(chartParams);
     }
 
     @RequestMapping("/userCount")
     public R listUserCount(){
-        ArrayList<PieParam> pieParams = tailOutRecordMapper.groupByUsername();
-        return R.ok(pieParams);
+        ArrayList<ChartParam> chartParams = tailOutRecordMapper.groupByUsername();
+        return R.ok(chartParams);
     }
 
 }

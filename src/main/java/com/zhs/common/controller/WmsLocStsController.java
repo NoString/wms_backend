@@ -45,4 +45,6 @@ public class WmsLocStsController extends BaseController {
         List<WmsLocSts> list = locStsService.list(wrapper);
         return R.ok(list);
     }
+
+
 }

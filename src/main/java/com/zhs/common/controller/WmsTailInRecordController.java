@@ -1,6 +1,6 @@
 package com.zhs.common.controller;
 
-import com.zhs.common.entity.param.PieParam;
+import com.zhs.common.entity.param.ChartParam;
 import com.zhs.common.mapper.WmsTailInRecordMapper;
 import com.zhs.system.utils.DateFormat;
 import com.zhs.system.utils.R;
@@ -39,13 +39,13 @@ public class WmsTailInRecordController extends BaseController {
 
     @RequestMapping("/classifyCount")
     public R listClassifyCount(){
-        ArrayList<PieParam> pieParams = inRecordMapper.groupByClassify();
-        return R.ok(pieParams);
+        ArrayList<ChartParam> chartParams = inRecordMapper.groupByClassify();
+        return R.ok(chartParams);
     }
 
     @RequestMapping("/userCount")
     public R listUserCount(){
-        ArrayList<PieParam> pieParams = inRecordMapper.groupByUsername();
-        return R.ok(pieParams);
+        ArrayList<ChartParam> chartParams = inRecordMapper.groupByUsername();
+        return R.ok(chartParams);
     }
 }

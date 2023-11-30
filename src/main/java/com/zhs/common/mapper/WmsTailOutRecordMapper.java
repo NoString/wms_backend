@@ -2,7 +2,7 @@ package com.zhs.common.mapper;
 
 import com.zhs.common.entity.WmsTailOutRecord;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zhs.common.entity.param.PieParam;
+import com.zhs.common.entity.param.ChartParam;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,10 +28,10 @@ public interface WmsTailOutRecordMapper extends BaseMapper<WmsTailOutRecord> {
 
     @Select("SELECT COUNT(m_classify_name) AS 'value', m_classify_name AS 'name' FROM `wms_tail_out_record` GROUP BY m_classify_name")
 
-    ArrayList<PieParam> groupByClassify();
+    ArrayList<ChartParam> groupByClassify();
 
     @Select("SELECT COUNT(create_by) AS 'value', create_by AS 'name' FROM `wms_tail_out_record` GROUP BY create_by")
 
-    ArrayList<PieParam> groupByUsername();
+    ArrayList<ChartParam> groupByUsername();
 
 }
