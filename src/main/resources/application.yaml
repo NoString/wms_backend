@@ -1,6 +1,15 @@
 spring:
   application:
     name: wms
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: "2640052921@qq.com"
+    password: "bwombgladdzudich"
+
+    properties:
+      "mail.smtp.ssl.enable": false
+    default-encoding: utf-8
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root

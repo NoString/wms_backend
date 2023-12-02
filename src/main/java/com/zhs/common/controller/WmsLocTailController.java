@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.zhs.common.entity.WmsLocHead;
 import com.zhs.common.entity.WmsLocTail;
 import com.zhs.common.service.IWmsLocTailService;
+import com.zhs.system.entity.User;
+import com.zhs.system.service.UsersService;
+import com.zhs.system.utils.EmailService;
 import com.zhs.system.utils.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.zhs.system.config.BaseController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>
@@ -30,6 +30,10 @@ import java.util.Map;
 public class WmsLocTailController extends BaseController {
     @Autowired
     private IWmsLocTailService locTailService;
+    @Autowired
+    private UsersService usersService;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/list")
     public R list(@RequestParam(required = false) Map<String, Object> params,
@@ -73,5 +77,41 @@ public class WmsLocTailController extends BaseController {
         result.put("name",tailStsNames);
         result.put("count",tailStsCount);
         return R.ok(result);
+    }
+
+
+    @RequestMapping("/notice")
+    public R noticeUsers(){
+        StringBuffer content = new StringBuffer();
+        List<WmsLocTail> locTails = locTailService.list(new QueryWrapper<WmsLocTail>()
+                .le("m_expired_date", new Date()));
+        List<User> users = usersService.list();
+
+        if (locTails.size() <= 0 || users.size() <= 0) {
+            return R.error("There are no user or no expired item");
+        }
+        content.append("<table border=\"1\">\n" +
+                "  <caption>\n" +
+                "    Expired Items\n" +
+                "  </caption>\n" +
+                "  <tr>\n" +
+                "    <th scope=\"col\" align=\"center\">Location Number</th>\n" +
+                "    <th scope=\"col\" align=\"center\">Material Name</th>\n" +
+                "    <th scope=\"col\" align=\"center\">Amount</th>\n" +
+                "    <th scope=\"col\" align=\"center\">Expired Date</th>\n" +
+                "  </tr>");
+        for (WmsLocTail wmsLocTail : locTails) {
+            content.append("<tr>\n" +
+                    "    <th scope=\"row\" align=\"center\">"+wmsLocTail.getLocNo()+"</th>\n" +
+                    "    <td align=\"center\">"+wmsLocTail.getName()+"</td>\n" +
+                    "    <td align=\"center\">"+wmsLocTail.getQty()+"</td>\n" +
+                    "    <td align=\"center\">"+wmsLocTail.getExpiredDate$()+"</td>\n" +
+                    "  </tr>");
+        }
+        content.append("</table>");
+        for (User user : users) {
+            emailService.sendEmail(user.getEmail(),"Hello, admin. here is some expired items",content.toString());
+        }
+        return R.ok("The system had sent all expired items to all users.");
     }
 }

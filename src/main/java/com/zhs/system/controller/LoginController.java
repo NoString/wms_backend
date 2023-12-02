@@ -1,11 +1,15 @@
 package com.zhs.system.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.zhs.common.entity.WmsLocTail;
+import com.zhs.common.service.IWmsLocTailService;
 import com.zhs.system.config.BaseController;
 import com.zhs.system.entity.User;
 import com.zhs.system.entity.UserLogin;
 import com.zhs.system.service.LoginService;
 import com.zhs.system.service.UsersService;
+import com.zhs.system.utils.Check;
+import com.zhs.system.utils.EmailService;
 import com.zhs.system.utils.R;
 import com.zhs.system.utils.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.zhs.system.utils.Constant.*;
@@ -28,6 +33,10 @@ public class LoginController extends BaseController {
     private UsersService usersService;
     @Autowired
     private LoginService loginService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private IWmsLocTailService locTailService;
 
 
 
@@ -35,6 +44,7 @@ public class LoginController extends BaseController {
 
     @PostMapping("/login")
     public R login(@RequestBody Map<String,Object> params){
+
 
         User user = usersService.getOne(new QueryWrapper<User>()
                 .eq("username", params.get("username")));
@@ -59,6 +69,31 @@ public class LoginController extends BaseController {
         res.put("token", userLogin.getToken());
         res.put("nickname", user.getNickname());
         res.put("id",user.getId());
+        List<WmsLocTail> list = locTailService.list(new QueryWrapper<WmsLocTail>()
+                .le("m_expired_date", new Date()));
+        if (!Check.isEmpty(user.getEmail()) && list.size() > 0) {
+            StringBuffer content = new StringBuffer();
+            content.append("<table border=\"1\">\n" +
+                    "  <caption>\n" +
+                    "    Expired Items\n" +
+                    "  </caption>\n" +
+                    "  <tr>\n" +
+                    "    <th scope=\"col\" align=\"center\">Location Number</th>\n" +
+                    "    <th scope=\"col\" align=\"center\">Material Name</th>\n" +
+                    "    <th scope=\"col\" align=\"center\">Amount</th>\n" +
+                    "    <th scope=\"col\" align=\"center\">Expired Date</th>\n" +
+                    "  </tr>");
+            for (WmsLocTail wmsLocTail : list) {
+                content.append("<tr>\n" +
+                        "    <th scope=\"row\" align=\"center\">"+wmsLocTail.getLocNo()+"</th>\n" +
+                        "    <td align=\"center\">"+wmsLocTail.getName()+"</td>\n" +
+                        "    <td align=\"center\">"+wmsLocTail.getQty()+"</td>\n" +
+                        "    <td align=\"center\">"+wmsLocTail.getExpiredDate$()+"</td>\n" +
+                        "  </tr>");
+            }
+            content.append("</table>");
+            emailService.sendEmail(user.getEmail(),"Hello, admin. here is some expired items",content.toString());
+        }
         return R.ok(res);
     }
 }
